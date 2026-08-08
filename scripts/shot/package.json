@@ -1,0 +1,9 @@
+{
+  "name": "ticker-shot-tour",
+  "private": true,
+  "type": "module",
+  "description": "One-off screenshot tour generator for the Ticker README (uses system Edge, no browser download).",
+  "dependencies": {
+    "puppeteer-core": "^23.11.0"
+  }
+}
