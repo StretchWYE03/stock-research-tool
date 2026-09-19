@@ -9,7 +9,7 @@ import ScoreGauge from "../components/ScoreGauge";
 import Tabs from "../components/Tabs";
 import { EmptyState, ErrorNote, Loading, SectionTitle } from "../components/ui";
 import { ArrowDownIcon, ArrowUpIcon, RefreshIcon, StarIcon } from "../components/Icons";
-import { fmtCompact, fmtMoney, fmtNum, fmtPct, timeAgo } from "../lib/format";
+import { fmtCompact, fmtMoney, fmtNum, fmtPct, safeExternalUrl, timeAgo } from "../lib/format";
 import { explainMetric, explainScore, explainSignal, whatToWatch, assessRisk } from "../lib/explain";
 import { addToWatchlist, isWatchlisted, removeFromWatchlist } from "../lib/storage";
 
@@ -312,7 +312,7 @@ export default function Stock() {
                 <EmptyState title="No recent news" />
               ) : (
                 news.map((item) => (
-                  <a key={item.id ?? item.url} href={item.url ?? "#"} target="_blank" rel="noreferrer" className="news-item">
+                  <a key={item.id ?? item.url} href={safeExternalUrl(item.url)} target="_blank" rel="noreferrer" className="news-item">
                     {item.thumbnail && <img src={item.thumbnail} alt="" className="news-thumb" loading="lazy" />}
                     <div className="news-body">
                       <div className="news-title">
@@ -585,7 +585,7 @@ function Fundamentals({ info, quote }: { info: Info; quote: Quote }) {
           <SectionTitle>Company</SectionTitle>
           <p className="business-summary">{info.longBusinessSummary}</p>
           {info.website && (
-            <a href={info.website} target="_blank" rel="noreferrer" className="company-site">
+            <a href={safeExternalUrl(info.website)} target="_blank" rel="noreferrer" className="company-site">
               {info.website}
             </a>
           )}

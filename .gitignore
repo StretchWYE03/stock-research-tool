@@ -11,3 +11,11 @@ scripts/shot/node_modules/
 # Local
 *.log
 *.pid
+
+# Private engineering notes (never published)
+INTERNAL.md
+
+# PyInstaller output
+build/
+dist/
+*.spec

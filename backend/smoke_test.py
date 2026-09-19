@@ -14,7 +14,9 @@ from fastapi.testclient import TestClient
 
 from app.main import app
 
-client = TestClient(app)
+# The origin/host guard rejects any non-loopback Host; TestClient's default
+# is "testserver", so pin the loopback host (and no Origin -> skipped).
+client = TestClient(app, headers={"host": "127.0.0.1"})
 results = []
 
 
@@ -141,6 +143,20 @@ for _ in range(35):
     statuses.append(client.get("/api/search?q=test").status_code)
 print(f"   statuses: {sorted(set(statuses))}")
 results.append(("ratelimit-429", 429 in statuses, 429))
+
+print("12. host/origin guard")
+r = client.get("/api/health", headers={"host": "evil.example.com"})
+results.append(("guard-evil-host", r.status_code == 403, r.status_code))
+print(f"   evil Host -> {r.status_code}")
+r = client.get("/api/health", headers={"origin": "https://evil.example.com"})
+results.append(("guard-evil-origin", r.status_code == 403, r.status_code))
+print(f"   evil Origin -> {r.status_code}")
+r = client.get("/api/health", headers={"origin": "http://localhost:5173"})
+results.append(("guard-good-origin", r.status_code == 200, r.status_code))
+print(f"   dev Origin (localhost:5173) -> {r.status_code}")
+r = client.get("/api/health", headers={"origin": "http://127.0.0.1:8765"})
+results.append(("guard-same-origin", r.status_code == 200, r.status_code))
+print(f"   app Origin (127.0.0.1:8765) -> {r.status_code}")
 
 print("\n=== SUMMARY ===")
 failed = [r for r in results if not r[1]]

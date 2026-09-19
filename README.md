@@ -110,6 +110,57 @@ Open http://localhost:5173. The Vite dev server proxies `/api` to the backend.
 > backend warms its cache; afterwards it's instant. Options and fundamentals
 > are also cached (15 min / 6 h).
 
+### Run without the Vite dev server
+
+Once `frontend/dist` exists (any `npm run build`), the backend serves the app
+from the same origin, so no dev server is needed:
+
+```bash
+cd backend
+.venv/Scripts/python desktop.py --no-window   # serves http://127.0.0.1:8765
+```
+
+## Desktop app (Windows)
+
+`Ticker.exe` is a self-contained desktop app: the FastAPI server runs in a
+background thread and a native window (Edge WebView2, no browser chrome) points
+at it. Closing the window shuts the server down. It binds 127.0.0.1 only, so
+nothing on your network can reach it.
+
+### Build
+
+Prerequisites: the backend venv from Getting started, Node, and a built
+frontend (the script builds it for you anyway).
+
+```bat
+scripts\build_desktop.bat
+```
+
+Output: `dist\Ticker\Ticker.exe` (~90 MB folder, pandas/numpy included).
+
+### Run
+
+Double-click `dist\Ticker\Ticker.exe`, or from a terminal:
+
+```
+dist\Ticker\Ticker.exe
+```
+
+The first run may show a Windows SmartScreen prompt (the exe is unsigned);
+choose More info then Run anyway. It opens on the first free port at or above
+8765, so it never clashes with a running instance. Paper trading and watchlist
+persist in the app's WebView profile, exactly like the browser version.
+
+Close the window to quit. If you ever need to force-quit, use Task Manager or
+`taskkill /IM Ticker.exe /F` (killing a single Ticker process can leave the
+server up, because the app runs as a parent and child pair).
+
+Headless mode for tests and scripting:
+
+```
+dist\Ticker\Ticker.exe --no-window --port 8765
+```
+
 ## API surface (all rate-limited)
 
 | Endpoint | Notes |

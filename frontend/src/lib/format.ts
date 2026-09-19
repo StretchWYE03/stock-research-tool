@@ -66,3 +66,18 @@ export function fmtDuration(seconds: number): string {
   const s = seconds % 60;
   return s ? `${m}m ${s}s` : `${m}m`;
 }
+
+/**
+ * Only http/https URLs are safe to hand to an href. Anything else (javascript:,
+ * data:, file:) is replaced with "#" so untrusted content can never run code
+ * in the app's origin when clicked.
+ */
+export function safeExternalUrl(url: string | null | undefined): string {
+  if (!url) return "#";
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:" ? url : "#";
+  } catch {
+    return "#";
+  }
+}
