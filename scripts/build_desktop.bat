@@ -25,8 +25,13 @@ if errorlevel 1 (
   if errorlevel 1 exit /b 1
 )
 
-echo == 3/3 Packaging Ticker.exe ==
+echo == 3/4 Creating application icon ==
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\make_icon.ps1 -OutputPath "scripts\ticker.ico"
+if errorlevel 1 exit /b 1
+
+echo == 4/4 Packaging Ticker.exe ==
 call backend\.venv\Scripts\pyinstaller.exe --noconfirm --onedir --windowed --name Ticker ^
+  --icon "scripts\ticker.ico" ^
   --paths backend ^
   --add-data "frontend/dist;frontend/dist" ^
   --collect-all webview ^
@@ -38,3 +43,4 @@ if errorlevel 1 exit /b 1
 
 echo.
 echo Done. Run: dist\Ticker\Ticker.exe
+powershell -NoProfile -Command "Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.MessageBox]::Show('Ticker build complete!`n`nNavigate to:`n%CD%\dist\Ticker\Ticker.exe','Ticker build complete',[System.Windows.Forms.MessageBoxButtons]::OK,[System.Windows.Forms.MessageBoxIcon]::Information) | Out-Null"

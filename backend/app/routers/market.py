@@ -12,9 +12,15 @@ router = APIRouter(prefix="/api/market", tags=["market"])
     summary="Market overview: indices + movers",
 )
 def overview() -> dict:
+    index_quotes = market_service.get_index_quotes()
+    mover_data = market_service.movers()
+    timestamps = [quote.get("updated_at_ms") for quote in index_quotes]
+    timestamps.append(mover_data.get("updated_at_ms"))
+    timestamps = [timestamp for timestamp in timestamps if timestamp]
     return {
-        "indices": market_service.get_index_quotes(),
-        "movers": market_service.movers(),
+        "indices": index_quotes,
+        "movers": mover_data,
+        "updated_at_ms": max(timestamps) if timestamps else None,
     }
 
 

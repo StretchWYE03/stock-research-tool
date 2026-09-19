@@ -227,6 +227,7 @@ def get_quote(symbol: str) -> dict | None:
         "fifty_day_avg": None,
         "two_hundred_day_avg": None,
         "market_state": meta.get("marketState"),
+        "updated_at_ms": int(regular_time * 1000) if regular_time else None,
     }
     cache.set(key, quote, ttl=30)
     return quote
@@ -580,6 +581,10 @@ def movers() -> dict[str, list[dict]]:
         "gainers": valid[:10],
         "losers": list(reversed(valid[-10:])),
         "most_active": sorted(valid, key=lambda r: r["volume"] or 0, reverse=True)[:10],
+        "updated_at_ms": max(
+            (quote.get("updated_at_ms") for quote in quotes.values()),
+            default=None,
+        ),
         "breadth": {
             "up": up,
             "down": down,

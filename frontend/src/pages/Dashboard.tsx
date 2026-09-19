@@ -6,7 +6,7 @@ import CountUp from "../components/CountUp";
 import { ErrorNote, Loading, SectionTitle } from "../components/ui";
 import TickerTape from "../components/TickerTape";
 import { ArrowDownIcon, ArrowUpIcon, RefreshIcon } from "../components/Icons";
-import { fmtMoney, fmtPct, fmtCompact } from "../lib/format";
+import { fmtDateTime, fmtMoney, fmtPct, fmtCompact } from "../lib/format";
 
 export default function Dashboard() {
   const [data, setData] = useState<Overview | null>(null);
@@ -40,6 +40,7 @@ export default function Dashboard() {
         <div>
           <h1 className="page-title">Market Overview</h1>
           <p className="page-sub">US &amp; Canadian equities · research only · not investment advice</p>
+          <p className="data-freshness">Data as of {fmtDateTime(data.updated_at_ms)}</p>
         </div>
         <button className="btn btn-ghost" onClick={() => setRefreshKey((k) => k + 1)}>
           <RefreshIcon size={15} /> Refresh

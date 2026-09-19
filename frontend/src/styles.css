@@ -544,6 +544,13 @@ button {
   font-size: 13.5px;
 }
 
+.data-freshness {
+  margin: 5px 0 0;
+  color: var(--text-3);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+}
+
 .panel {
   background: linear-gradient(180deg, var(--panel), var(--bg-soft));
   border: 1px solid var(--border);

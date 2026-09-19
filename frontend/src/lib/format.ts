@@ -56,6 +56,16 @@ export function fmtTime(ms: number | null | undefined): string {
   return new Date(ms).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
 }
 
+export function fmtDateTime(ms: number | null | undefined): string {
+  if (!ms) return "-";
+  return new Date(ms).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
 export function fmtClock(ms: number): string {
   return new Date(ms).toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 }

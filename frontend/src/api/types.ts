@@ -15,6 +15,7 @@ export interface Quote {
   year_high: number | null;
   year_low: number | null;
   market_state?: string | null;
+  updated_at_ms?: number | null;
 }
 
 export interface Bar {
@@ -241,5 +242,7 @@ export interface Overview {
     losers: MoverRow[];
     most_active: MoverRow[];
     breadth: Breadth;
+    updated_at_ms?: number | null;
   };
+  updated_at_ms?: number | null;
 }
